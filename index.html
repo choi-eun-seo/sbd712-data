@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>성북동길 축제 통계 대시보드</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link rel="stylesheet" href="./css/dashboard.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">길따라 성북동길 페스타</p>
+          <h1>통계 대시보드</h1>
+          <p class="subtitle">로컬 JSON 데이터 기준 집계</p>
+        </div>
+        <p id="load-status" aria-live="polite">데이터 불러오는 중…</p>
+      </header>
+
+      <section class="kpi-grid" aria-label="핵심 지표">
+        <article class="kpi">
+          <p>가입자</p>
+          <strong id="kpi-users">-</strong>
+          <span id="kpi-users-sub" class="kpi-sub"></span>
+        </article>
+        <article class="kpi">
+          <p>스탬프</p>
+          <strong id="kpi-stamps">-</strong>
+          <span id="kpi-stamps-sub" class="kpi-sub"></span>
+        </article>
+        <article class="kpi">
+          <p>교환권 발급</p>
+          <strong id="kpi-vouchers">-</strong>
+          <span id="kpi-vouchers-sub" class="kpi-sub"></span>
+        </article>
+        <article class="kpi">
+          <p>쿠폰 사용</p>
+          <strong id="kpi-used-coupons">-</strong>
+          <span id="kpi-used-coupons-sub" class="kpi-sub"></span>
+        </article>
+        <article class="kpi">
+          <p>교환권 → 사용 전환</p>
+          <strong id="kpi-conversion">-</strong>
+          <span id="kpi-conversion-sub" class="kpi-sub"></span>
+        </article>
+        <article class="kpi kpi-amount">
+          <p>쿠폰 사용 총액</p>
+          <strong id="kpi-coupon-amount">-</strong>
+          <span id="kpi-coupon-amount-sub" class="kpi-sub"></span>
+        </article>
+        <article class="kpi">
+          <p>취향 테스트</p>
+          <strong id="kpi-tests">-</strong>
+          <span id="kpi-tests-sub" class="kpi-sub"></span>
+        </article>
+        <article class="kpi">
+          <p>응원 메시지</p>
+          <strong id="kpi-messages">-</strong>
+          <span id="kpi-messages-sub" class="kpi-sub"></span>
+        </article>
+      </section>
+
+      <section class="chart-grid">
+        <article class="chart-wide">
+          <header class="section-head">
+            <div>
+              <h2>시간별 추이 · 가입 / 스탬프</h2>
+              <p class="chart-desc">오전 8시 ~ 23시 · 시간대별 피크</p>
+            </div>
+            <div class="view-toggle" role="group" aria-label="시간별 보기 전환">
+              <button type="button" class="toggle-btn is-active" data-hourly="both">함께 보기</button>
+              <button type="button" class="toggle-btn" data-hourly="users">가입만 보기</button>
+              <button type="button" class="toggle-btn" data-hourly="stamps">스탬프만 보기</button>
+            </div>
+          </header>
+          <div class="chart-box chart-box-xl">
+            <canvas id="chart-hourly"></canvas>
+          </div>
+        </article>
+
+        <article class="chart-wide">
+          <header class="section-head">
+            <div>
+              <h2>일별 활동 추이 · 교환권 / 쿠폰 사용</h2>
+              <p class="chart-desc">일자별 발급·사용 흐름</p>
+            </div>
+            <div class="view-toggle" role="group" aria-label="일별 보기 전환">
+              <button type="button" class="toggle-btn is-active" data-daily="both">함께 보기</button>
+              <button type="button" class="toggle-btn" data-daily="vouchers">교환권만 보기</button>
+              <button type="button" class="toggle-btn" data-daily="coupons">사용만 보기</button>
+            </div>
+          </header>
+          <div class="chart-box chart-box-xl">
+            <canvas id="chart-daily"></canvas>
+          </div>
+        </article>
+
+        <article class="chart-wide">
+          <header>
+            <h2>쿠폰 사용 가입자 정보 교차 분석</h2>
+            <p class="chart-desc">쿠폰을 사용한 사람의 성별·연령대·직업·거주지 교차 분석 · 숫자 = 사용 건수 (전체 가입자 직업 통계는 아래에)</p>
+          </header>
+          <div class="demo-grid">
+            <div>
+              <h3>성별</h3>
+              <div class="chart-box chart-box-sm">
+                <canvas id="chart-coupon-gender"></canvas>
+              </div>
+            </div>
+            <div>
+              <h3>연령대</h3>
+              <div class="chart-box chart-box-sm">
+                <canvas id="chart-coupon-age"></canvas>
+              </div>
+            </div>
+            <div>
+              <h3>직업 Top</h3>
+              <div class="chart-box chart-box-sm">
+                <canvas id="chart-coupon-job"></canvas>
+              </div>
+            </div>
+            <div>
+              <h3>거주지</h3>
+              <div class="chart-box chart-box-sm">
+                <canvas id="chart-coupon-region"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="crosstab-grid">
+            <div class="crosstab-card">
+              <h3>성별 × 연령대</h3>
+              <div id="table-gender-age" class="matrix-wrap"></div>
+            </div>
+            <div class="crosstab-card">
+              <h3>연령대 × 직업</h3>
+              <div id="table-age-job" class="matrix-wrap"></div>
+            </div>
+            <div class="crosstab-card crosstab-wide">
+              <h3>성별 × 직업</h3>
+              <div id="table-gender-job" class="matrix-wrap"></div>
+            </div>
+          </div>
+        </article>
+
+        <article>
+          <header>
+            <h2>성별 × 연령대</h2>
+            <p class="chart-desc">전체 가입자 구성</p>
+          </header>
+          <div class="chart-box">
+            <canvas id="chart-gender-age"></canvas>
+          </div>
+        </article>
+
+        <article>
+          <header>
+            <h2>유입 경로 Top</h2>
+            <p class="chart-desc">가입자가 행사를 알게 된 경로</p>
+          </header>
+          <div class="chart-box">
+            <canvas id="chart-channel"></canvas>
+          </div>
+        </article>
+
+        <article>
+          <header>
+            <h2>직업 분포</h2>
+            <p class="chart-desc">주요 직업군 비중</p>
+          </header>
+          <div class="chart-box">
+            <canvas id="chart-job"></canvas>
+          </div>
+        </article>
+
+        <article>
+          <header>
+            <h2>거주지</h2>
+            <p class="chart-desc">참가자 거주 지역</p>
+          </header>
+          <div class="chart-with-legend">
+            <div class="chart-box chart-box-doughnut">
+              <canvas id="chart-region"></canvas>
+            </div>
+            <ul id="region-legend" class="stat-list"></ul>
+          </div>
+        </article>
+
+        <article>
+          <header>
+            <h2>취향 테스트 결과</h2>
+            <p class="chart-desc">유형별 응답 수 · 비율</p>
+          </header>
+          <div class="chart-with-legend">
+            <div class="chart-box chart-box-doughnut">
+              <canvas id="chart-test"></canvas>
+            </div>
+            <ul id="test-legend" class="stat-list"></ul>
+          </div>
+        </article>
+
+        <article>
+          <header>
+            <h2>쿠폰 금액 구성</h2>
+            <p class="chart-desc">발급 교환권 vs 실제 사용</p>
+          </header>
+          <div class="chart-box">
+            <canvas id="chart-coupon-amount"></canvas>
+          </div>
+        </article>
+
+        <article>
+          <header>
+            <h2>스탬프 장소 Top 10</h2>
+            <p class="chart-desc">발급이 많았던 스팟</p>
+          </header>
+          <div class="chart-box chart-box-tall">
+            <canvas id="chart-stamp-places"></canvas>
+          </div>
+        </article>
+
+        <article>
+          <header>
+            <h2>응원 타겟 Top 10</h2>
+            <p class="chart-desc">응원 메시지를 많이 받은 대상</p>
+          </header>
+          <div class="chart-box chart-box-tall">
+            <canvas id="chart-support"></canvas>
+          </div>
+        </article>
+      </section>
+
+      <section class="table-section ranking-section">
+        <header>
+          <h2>스탬프 발급 장소</h2>
+          <p class="chart-desc">장소별 발급 수 · 비중</p>
+        </header>
+        <div class="ranking-layout">
+          <div class="chart-box chart-box-ranking">
+            <canvas id="chart-stamp-rank"></canvas>
+          </div>
+          <div id="rank-stamp-places" class="rank-list"></div>
+        </div>
+      </section>
+
+      <section class="table-section ranking-section">
+        <header>
+          <h2>쿠폰 사용 상점</h2>
+          <p class="chart-desc">상점별 사용 건수 · 금액 · 비중</p>
+        </header>
+        <div class="ranking-layout">
+          <div class="chart-box chart-box-ranking">
+            <canvas id="chart-shop-rank"></canvas>
+          </div>
+          <div id="rank-coupon-shops" class="rank-list"></div>
+        </div>
+      </section>
+
+      <section class="table-section ranking-section">
+        <header>
+          <h2>교환권 발급 사유</h2>
+          <p class="chart-desc">사유별 건수 · 금액 · 비중</p>
+        </header>
+        <div class="ranking-layout">
+          <div class="chart-box chart-box-ranking">
+            <canvas id="chart-voucher-rank"></canvas>
+          </div>
+          <div id="rank-voucher-reasons" class="rank-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script type="module" src="./js/dashboard.js"></script>
+  </body>
+</html>
