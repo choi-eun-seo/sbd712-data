@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>취향 테스트 · 성북동길 축제 통계</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link rel="stylesheet" href="./css/dashboard.css" />
+  </head>
+  <body>
+    <main class="container">
+      <nav class="site-nav" aria-label="페이지 이동">
+        <a href="./index.html">대시보드</a>
+        <a href="./messages.html">응원 메시지</a>
+        <a href="./tests.html">취향 테스트</a>
+      </nav>
+
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">길따라 성북동길 페스타</p>
+          <h1>취향 테스트</h1>
+          <p class="subtitle">유형별 결과와 참가자 교차 분석</p>
+        </div>
+        <p id="load-status" aria-live="polite">데이터 불러오는 중…</p>
+      </header>
+
+      <section class="kpi-grid" aria-label="핵심 지표">
+        <article class="kpi">
+          <p>테스트 응답</p>
+          <strong id="kpi-tests">-</strong>
+          <span id="kpi-tests-sub" class="kpi-sub"></span>
+        </article>
+        <article class="kpi">
+          <p>결과 유형</p>
+          <strong id="kpi-types">-</strong>
+          <span id="kpi-types-sub" class="kpi-sub"></span>
+        </article>
+        <article class="kpi">
+          <p>1위 유형</p>
+          <strong id="kpi-top">-</strong>
+          <span id="kpi-top-sub" class="kpi-sub"></span>
+        </article>
+        <article class="kpi">
+          <p>참여 유저</p>
+          <strong id="kpi-users">-</strong>
+          <span id="kpi-users-sub" class="kpi-sub"></span>
+        </article>
+      </section>
+
+      <section class="chart-grid">
+        <article>
+          <header>
+            <h2>취향 테스트 결과</h2>
+            <p class="chart-desc">유형별 응답 수 · 비율</p>
+          </header>
+          <div class="chart-with-legend">
+            <div class="chart-box chart-box-doughnut">
+              <canvas id="chart-test"></canvas>
+            </div>
+            <ul id="test-legend" class="stat-list"></ul>
+          </div>
+        </article>
+
+        <article>
+          <header>
+            <h2>유형별 응답 수</h2>
+            <p class="chart-desc">막대 그래프로 비교</p>
+          </header>
+          <div class="chart-box">
+            <canvas id="chart-test-bar"></canvas>
+          </div>
+        </article>
+
+        <article>
+          <header>
+            <h2>참가자 성별</h2>
+            <p class="chart-desc">테스트를 한 가입자 구성</p>
+          </header>
+          <div class="chart-box">
+            <canvas id="chart-test-gender"></canvas>
+          </div>
+        </article>
+
+        <article>
+          <header>
+            <h2>참가자 연령대</h2>
+            <p class="chart-desc">테스트를 한 가입자 구성</p>
+          </header>
+          <div class="chart-box">
+            <canvas id="chart-test-age"></canvas>
+          </div>
+        </article>
+
+        <article class="chart-wide">
+          <header>
+            <h2>테스트 결과 교차 분석</h2>
+            <p class="chart-desc">유형 × 성별 · 유형 × 연령대 · 숫자 = 응답 수</p>
+          </header>
+          <div class="crosstab-grid">
+            <div class="crosstab-card">
+              <h3>결과 × 성별</h3>
+              <div id="table-result-gender" class="matrix-wrap"></div>
+            </div>
+            <div class="crosstab-card">
+              <h3>결과 × 연령대</h3>
+              <div id="table-result-age" class="matrix-wrap"></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="card-section table-section">
+        <header class="section-head">
+          <div>
+            <h2>테스트 응답 목록</h2>
+            <p class="chart-desc">유형·검색으로 필터링</p>
+          </div>
+          <div class="filter-bar">
+            <label>
+              유형
+              <select id="filter-result">
+                <option value="">전체</option>
+              </select>
+            </label>
+            <label>
+              검색
+              <input id="filter-search" type="search" placeholder="유형명 검색…" />
+            </label>
+          </div>
+        </header>
+        <p id="list-status" class="chart-desc">-</p>
+        <div id="test-list" class="message-list"></div>
+        <div class="pager">
+          <button type="button" class="toggle-btn" id="page-prev">이전</button>
+          <span id="page-info">1 / 1</span>
+          <button type="button" class="toggle-btn" id="page-next">다음</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script type="module" src="./js/tests.js"></script>
+  </body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>응원 메시지 · 성북동길 축제 통계</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link rel="stylesheet" href="./css/dashboard.css" />
+  </head>
+  <body>
+    <main class="container">
+      <nav class="site-nav" aria-label="페이지 이동">
+        <a href="./index.html">대시보드</a>
+        <a href="./messages.html">응원 메시지</a>
+        <a href="./tests.html">취향 테스트</a>
+      </nav>
+
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">길따라 성북동길 페스타</p>
+          <h1>응원 메시지</h1>
+          <p class="subtitle">대상별 응원 현황과 메시지 모아보기</p>
+        </div>
+        <p id="load-status" aria-live="polite">데이터 불러오는 중…</p>
+      </header>
+
+      <section class="kpi-grid" aria-label="핵심 지표">
+        <article class="kpi">
+          <p>응원 메시지</p>
+          <strong id="kpi-messages">-</strong>
+          <span id="kpi-messages-sub" class="kpi-sub"></span>
+        </article>
+        <article class="kpi">
+          <p>응원 대상</p>
+          <strong id="kpi-targets">-</strong>
+          <span id="kpi-targets-sub" class="kpi-sub"></span>
+        </article>
+        <article class="kpi">
+          <p>작성 유저</p>
+          <strong id="kpi-writers">-</strong>
+          <span id="kpi-writers-sub" class="kpi-sub"></span>
+        </article>
+        <article class="kpi">
+          <p>평균 글자수</p>
+          <strong id="kpi-avg-len">-</strong>
+          <span id="kpi-avg-len-sub" class="kpi-sub"></span>
+        </article>
+      </section>
+
+      <section class="chart-grid">
+        <article class="chart-wide">
+          <header>
+            <h2>응원 타겟 Top</h2>
+            <p class="chart-desc">메시지를 많이 받은 대상</p>
+          </header>
+          <div class="chart-box chart-box-xl">
+            <canvas id="chart-targets"></canvas>
+          </div>
+        </article>
+
+        <article>
+          <header>
+            <h2>작성자 성별</h2>
+            <p class="chart-desc">응원 메시지를 남긴 가입자 구성</p>
+          </header>
+          <div class="chart-box">
+            <canvas id="chart-writer-gender"></canvas>
+          </div>
+        </article>
+
+        <article>
+          <header>
+            <h2>작성자 연령대</h2>
+            <p class="chart-desc">응원 메시지를 남긴 가입자 구성</p>
+          </header>
+          <div class="chart-box">
+            <canvas id="chart-writer-age"></canvas>
+          </div>
+        </article>
+      </section>
+
+      <section class="card-section table-section">
+        <header class="section-head">
+          <div>
+            <h2>응원 메시지 목록</h2>
+            <p class="chart-desc">대상·검색어로 필터링</p>
+          </div>
+          <div class="filter-bar">
+            <label>
+              대상
+              <select id="filter-target">
+                <option value="">전체</option>
+              </select>
+            </label>
+            <label>
+              검색
+              <input id="filter-search" type="search" placeholder="메시지 내용…" />
+            </label>
+          </div>
+        </header>
+        <p id="list-status" class="chart-desc">-</p>
+        <div id="message-list" class="message-list"></div>
+        <div class="pager">
+          <button type="button" class="toggle-btn" id="page-prev">이전</button>
+          <span id="page-info">1 / 1</span>
+          <button type="button" class="toggle-btn" id="page-next">다음</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script type="module" src="./js/messages.js"></script>
+  </body>
+</html>

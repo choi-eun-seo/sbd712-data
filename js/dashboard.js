@@ -1,3 +1,5 @@
+import { markActiveNav } from "./common.js";
+
 Chart.register(ChartDataLabels);
 
 const DATA_FILES = {
@@ -455,6 +457,7 @@ function bindToggleGroup(attrName, onChange) {
 }
 
 async function main() {
+  markActiveNav();
   try {
     const [users, stamps, usedCoupons, vouchers, tests, messages] = await Promise.all([
       loadJson(DATA_FILES.users),
